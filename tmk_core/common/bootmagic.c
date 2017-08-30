@@ -9,8 +9,12 @@
 #include "host.h"
 #include "action_layer.h"
 #include "eeconfig.h"
+#ifdef KEYMAP_IN_EEPROM_ENABLE
 #include "keymap_in_eeprom.h"
+#endif
+#ifdef LEDMAP_IN_EEPROM_ENABLE
 #include "ledmap_in_eeprom.h"
+#endif
 #include "bootmagic.h"
 #include "hook.h"
 

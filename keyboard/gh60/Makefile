@@ -42,7 +42,7 @@
 TARGET = gh60_lufa
 
 # Directory common source filess exist
-TMK_DIR = ../../tmk_core_custom
+TMK_DIR = ../../tmk_core
 
 # Directory keyboard dependent files exist
 TARGET_DIR = .
