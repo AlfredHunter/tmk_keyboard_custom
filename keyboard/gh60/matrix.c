@@ -72,6 +72,11 @@ void matrix_init(void)
     MCUCR = (1<<JTD);
     MCUCR = (1<<JTD);
 
+#ifdef BLE_ENABLE
+    // initilaze ble uart
+    serial_init();
+#endif
+
 #ifdef PS2_MOUSE_ENABLE
     // ps2 mouse detect
     DDRF &= ~(1<<PF5 | 1<<PF4);

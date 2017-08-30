@@ -29,7 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 #include "debug.h"
 #include "keymap.h"
+#ifdef KEYMAP_IN_EEPROM_ENABLE
 #include "keymap_in_eeprom.h"
+#endif
 
 
 extern const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS];

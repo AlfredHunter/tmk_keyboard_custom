@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef SOFTPWM_LED_ENABLE
 #include "softpwm_led.h"
 #else
+#ifdef BREATHING_LED_ENABLE
 #include "breathing_led.h"
+#endif
 #endif
 #include "hook.h"
 #ifdef RGB_LED_ENABLE
@@ -107,7 +109,9 @@ void backlight_disable(void)
 
 void backlight_set(uint8_t level)
 {
+#ifdef SOFTPWM_LED_ENABLE
     softpwm_enable();
+#endif
 #ifdef BREATHING_LED_ENABLE
     switch (level) {
         case 1:

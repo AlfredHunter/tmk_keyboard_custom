@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         GH60
 #define DESCRIPTION     t.m.k. keyboard firmware for GH60
 
+#define REV             CHN
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
@@ -124,5 +125,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
+
+#define BLE_ENABLE
+#ifdef BLE_ENABLE
+/* BLE Software Serial configuration
+ *     asynchronous, negative logic, 1200baud, no flow control
+ *     1-start bit, 8-data bit, non parity, 1-stop bit
+ */
+#define SERIAL_SOFT_BAUD            9600
+#define SERIAL_SOFT_PARITY_NONE
+#define SERIAL_SOFT_BIT_ORDER_LSB
+#define SERIAL_SOFT_LOGIC_NEGATIVE
+/* RXD Port */
+#define SERIAL_SOFT_RXD_ENABLE
+#define SERIAL_SOFT_RXD_DDR         DDRF
+#define SERIAL_SOFT_RXD_PORT        PORTF
+#define SERIAL_SOFT_RXD_PIN         PINF
+#define SERIAL_SOFT_RXD_BIT         6
+#define SERIAL_SOFT_RXD_VECT        INT6_vect
+/* RXD Interupt */
+#ifdef SERIAL_SOFT_LOGIC_NEGATIVE
+/* enable interrupt: INT6(rising edge) */
+#define INTR_TRIG_EDGE   ((1<<ISC61)|(1<<ISC60))
+#else
+/* enable interrupt: INT6(falling edge) */
+#define INTR_TRIG_EDGE   ((1<<ISC61)|(0<<ISC60))
+#endif
+#define SERIAL_SOFT_RXD_INIT()      do { \
+    /* pin configuration: input with pull-up */ \
+    SERIAL_SOFT_RXD_DDR &= ~(1<<SERIAL_SOFT_RXD_BIT); \
+    SERIAL_SOFT_RXD_PORT |= (1<<SERIAL_SOFT_RXD_BIT); \
+    EICRB |= INTR_TRIG_EDGE; \
+    EIMSK |= (1<<INT6); \
+    sei(); \
+} while (0)
+#define SERIAL_SOFT_RXD_INT_ENTER()
+#define SERIAL_SOFT_RXD_INT_EXIT()  do { \
+    /* clear interrupt  flag */ \
+    EIFR = (1<<INTF6); \
+} while (0)
+#define SERIAL_SOFT_RXD_READ()      (SERIAL_SOFT_RXD_PIN&(1<<SERIAL_SOFT_RXD_BIT))
+/* TXD Port */
+#define SERIAL_SOFT_TXD_ENABLE
+#define SERIAL_SOFT_TXD_DDR         DDRF
+#define SERIAL_SOFT_TXD_PORT        PORTF
+#define SERIAL_SOFT_TXD_PIN         PINF
+#define SERIAL_SOFT_TXD_BIT         7
+#define SERIAL_SOFT_TXD_HI()        do { SERIAL_SOFT_TXD_PORT |=  (1<<SERIAL_SOFT_TXD_BIT); } while (0)
+#define SERIAL_SOFT_TXD_LO()        do { SERIAL_SOFT_TXD_PORT &= ~(1<<SERIAL_SOFT_TXD_BIT); } while (0)
+#define SERIAL_SOFT_TXD_INIT()      do { \
+    /* pin configuration: output */ \
+    SERIAL_SOFT_TXD_DDR |= (1<<SERIAL_SOFT_TXD_BIT); \
+    /* idle */ \
+    SERIAL_SOFT_TXD_ON(); \
+} while (0)
+#endif//BLE_ENABLE
 
 #endif
